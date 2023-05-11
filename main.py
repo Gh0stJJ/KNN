@@ -3,7 +3,6 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from knn_core import KNN
-
 import tkinter as tk
 from tkinter.filedialog import askopenfilename
 import os
@@ -22,9 +21,6 @@ def show_dataframe(df):
     # Inicia el bucle de eventos
     root.mainloop()
     
-
-
-
 if __name__ == "__main__":
     
     while True:
@@ -87,14 +83,32 @@ if __name__ == "__main__":
             #knn class
             knn_core = KNN()
             #train knn
-            k_opt = knn_core.best_k(test, train)
-            print(f"Best K: {k_opt}")
+            k_opt = knn_core.opt_best_k(test, train)
+            print("--------------------------------------------------------")
+            print(f"Best K: {k_opt[0]} with {k_opt[1]*100}% accuracy")
             input("Presione una tecla para continuar...")
             
         elif option == "4":
-            print("Generating box plots...")
-            df.plot(kind='box', subplots=True, layout=(2, 2), sharex=False, sharey=False)
-            plt.show()
+            print("Clasificacion de nuevo dato segun K")
+            #new instance
+            knn_core = KNN()
+            new_instance = []
+            for i in range(col_count-1):
+                new_instance.append(float(input(f"X{i}: ")))
+
+            k_val = int(input("K: ? "))
+            
+            #list to dataframe
+            new_instance = pd.DataFrame([new_instance])
+            #give column names
+            for i in range(col_count-1):
+                new_instance.rename(columns={i: 'X'+str(i)}, inplace=True)
+            
+            #knn class
+            print(knn_core.get_class(new_instance, train, k_val))
+            input("Presione una tecla para continuar...")
+                
+            
         elif option == "5":
             print("Saliendo...")
             break
